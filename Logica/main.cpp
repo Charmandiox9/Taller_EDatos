@@ -55,6 +55,7 @@ NodoSistema* crearTablero() {
     return listaPosiciones;
 }
 
+
 void disparar(Tanque* tanque, NodoSistema* tablero, int posX, int posY) {
     // Implementar la lógica de disparo aquí
     cout << "Tanque ID: " << tanque->getIdTanque() << " disparando!" << endl;
@@ -66,9 +67,44 @@ void disparar(Tanque* tanque, NodoSistema* tablero, int posX, int posY) {
         return;
     }
 
-    while(temp != nullptr) {
-        if (temp->getPosX() == posX && temp->getPosY() == posY) {
-            Tanque* tanqueEnPosicion = temp->getTanque();
+    // Buscar la posición del tanque que dispara
+    NodoSistema* tanqueDisparando = nullptr;
+    NodoSistema* tempBusqueda = tablero;
+    while (tempBusqueda != nullptr) {
+        if (tempBusqueda->getTanque() == tanque) {
+            tanqueDisparando = tempBusqueda;  // Nodo donde está el tanque que dispara
+            break;
+        }
+        tempBusqueda = tempBusqueda->getSiguiente();
+    }
+
+    if (tanqueDisparando == nullptr) {
+        cout << "Error: El tanque que dispara no se encuentra en el tablero." << endl;
+        return;
+    }
+
+    // Mostrar la posición del tanque que dispara
+    cout << "Tanque que dispara se encuentra en la posición: (" 
+         << tanqueDisparando->getPosX() << ", " << tanqueDisparando->getPosY() << ")" << endl;
+
+    // Buscar el nodo donde se encuentra el tanque objetivo
+    temp = tablero;
+    srand(time(0));
+while (temp != nullptr) {
+    if (temp->getPosX() == posX && temp->getPosY() == posY) {
+        Tanque* tanqueEnPosicion = temp->getTanque();
+        
+        // Calcular la probabilidad del disparo (por ejemplo, afectado por terreno)
+        int terrenoInicio = tanqueDisparando->getTipoTerreno();
+        int terrenoFinal = temp->getTipoTerreno();
+        double probabilidad = tanque->getProbabilidadDeImpacto(terrenoInicio, terrenoFinal);
+
+        cout << "Probabilidad de acierto: " << probabilidad * 100 << "%" << endl;
+
+        // Verificar si el disparo tiene éxito
+        int numeroAleatorio = rand() % 100; // Generar un número aleatorio entre 0 y 99
+        cout << "Número aleatorio: " << numeroAleatorio << endl;
+        if (numeroAleatorio < (probabilidad * 100)) {
             if (tanqueEnPosicion != nullptr) {
                 tanqueEnPosicion->actualizarVida(tanquePesado->getDaño());
                 cout << "Tanque ID: " << tanqueEnPosicion->getIdTanque() << " ha sido alcanzado!" << endl;
@@ -76,10 +112,13 @@ void disparar(Tanque* tanque, NodoSistema* tablero, int posX, int posY) {
             } else {
                 cout << "¡Fallaste! No hay tanque en la posición (" << posX << ", " << posY << ")." << endl;
             }
-            break;
+        } else {
+            cout << "¡Fallaste! El disparo no tuvo éxito." << endl;
         }
-        temp = temp->getSiguiente();
+        break;
     }
+    temp = temp->getSiguiente();
+}
 }
 
 int main() {
@@ -113,6 +152,6 @@ int main() {
     }
     
     // Disparar al tanque en la posición (0, 0)
-    disparar(tanque1, tableroPosiciones, 0, 0); // Dispara al tanque en la posición (0, 0)
+    disparar(tanque1, tableroPosiciones, 2, 3); // Dispara al tanque en la posición (0, 0)
     return 0;
 }
