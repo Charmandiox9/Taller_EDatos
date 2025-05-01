@@ -3,11 +3,11 @@
 TanquePesado::TanquePesado(int id) : Tanque(id) {
     daño = 200;
     movimientoBase = 2;
-    vida = 200; // Ajuste para evitar el constructor base que usa obtenerVidaPorTipo()
+    vida = 350; // Ajuste para evitar el constructor base que usa obtenerVidaPorTipo()
 }
 
 int TanquePesado::obtenerVidaPorTipo() {
-    return 200;
+    return 350;
 }
 
 int TanquePesado::getDaño() const {

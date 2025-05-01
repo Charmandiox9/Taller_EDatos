@@ -10,6 +10,7 @@ public:
     Tanque(int id);
     virtual int obtenerVidaPorTipo();
     void actualizarVida(int cantidad);
+    double getProbabilidadDeImpacto(int tipoTerrenoInicio, int tipoTerrenoFinal) const;
 
     int getIdTanque() const;
     int getVida() const;
